@@ -1,6 +1,7 @@
 package theandroidguy.bart.keepreceipt;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,6 +33,9 @@ public class NavigationActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Refreshing receipts...", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                Intent intent = new Intent(getApplicationContext(), ScanReceipt.class);
+                startActivity(intent);
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
