@@ -62,10 +62,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_below="@+id/textView"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
             android:padding="16dp"
             app:cardCornerRadius="18dp"
             app:layout_constraintBottom_toTopOf="@+id/textView"
@@ -74,7 +74,7 @@
             app:layout_constraintTop_toBottomOf="@+id/progressStatusText">
 
                 <TextureView
-                    android:id="@+id/textureView"
+                    android:id="@+id/scannedReceiptImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView"

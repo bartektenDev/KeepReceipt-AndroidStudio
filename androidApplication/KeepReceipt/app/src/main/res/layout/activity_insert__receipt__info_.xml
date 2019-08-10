@@ -23,85 +23,86 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/brandOfStoreInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
+        android:hint="Brand/Store Name"
         android:inputType="textPersonName"
-        android:text="Brand/Store Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressStatusText2" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/amountInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
+        android:hint="$0.00"
         android:inputType="textPersonName"
-        android:text="$0.00"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/brandOfStoreInput" />
 
     <EditText
-        android:id="@+id/editText6"
+        android:id="@+id/dateText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
+        android:hint="Date"
         android:inputType="textPersonName"
-        android:text="Date"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintEnd_toStartOf="@+id/changeDataBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4" />
+        app:layout_constraintTop_toBottomOf="@+id/amountInput" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/changeDataBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:text="Change"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="178dp"
+        app:layout_constraintTop_toBottomOf="@+id/amountInput"
         tools:visibility="visible" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/addReceiptBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:text="Next"
+        android:text="Add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/receiptscannedimagecard"
-        android:layout_width="200dp"
-        android:layout_height="250dp"
-        android:layout_below="@+id/button2"
+        android:layout_width="250dp"
+        android:layout_height="350dp"
+        android:layout_below="@+id/changeDataBtn"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:padding="16dp"
         app:cardCornerRadius="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/addReceiptBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2">
+        app:layout_constraintTop_toBottomOf="@+id/dateText">
 
-        <TextureView
-            android:id="@+id/textureView"
+        <ImageView
+            android:id="@+id/scannedReceiptImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView"
