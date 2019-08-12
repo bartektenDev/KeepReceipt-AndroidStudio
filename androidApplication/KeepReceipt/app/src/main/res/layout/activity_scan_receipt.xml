@@ -74,12 +74,15 @@
             app:layout_constraintTop_toBottomOf="@+id/progressStatusText">
 
                 <TextureView
-                    android:id="@+id/scannedReceiptImageView"
+                    android:id="@+id/scannedReceiptTextureView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView"
                     android:gravity="center"
-                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    tools:visibility="visible" >
+
+                </TextureView>
 
         </android.support.v7.widget.CardView>
 

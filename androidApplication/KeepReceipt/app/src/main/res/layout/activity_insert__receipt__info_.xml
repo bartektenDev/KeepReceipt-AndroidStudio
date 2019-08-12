@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".Insert_Receipt_Info_Activity">
 
+    <EditText
+        android:id="@+id/dateText2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Date"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/changeDataBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amountInput" />
+
     <TextView
         android:id="@+id/progressStatusText2"
         android:layout_width="300dp"
@@ -51,18 +65,18 @@
         app:layout_constraintTop_toBottomOf="@+id/brandOfStoreInput" />
 
     <EditText
-        android:id="@+id/dateText"
+        android:id="@+id/categoryText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
-        android:hint="Date"
+        android:hint="Category"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/changeDataBtn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountInput" />
+        app:layout_constraintTop_toBottomOf="@+id/dateText2" />
 
     <Button
         android:id="@+id/changeDataBtn"
@@ -87,8 +101,8 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/receiptscannedimagecard"
-        android:layout_width="250dp"
-        android:layout_height="350dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_below="@+id/changeDataBtn"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
@@ -99,14 +113,15 @@
         app:layout_constraintBottom_toTopOf="@+id/addReceiptBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateText">
+        app:layout_constraintTop_toBottomOf="@+id/categoryText">
 
         <ImageView
-            android:id="@+id/scannedReceiptImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/scannedReceiptTextureView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/textView"
             android:gravity="center"
+            android:scaleType="fitCenter"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     </android.support.v7.widget.CardView>

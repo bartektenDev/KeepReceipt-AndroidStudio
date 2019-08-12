@@ -1,13 +1,17 @@
 package theandroidguy.bart.keepreceipt;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -36,6 +40,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.text.TextRecognizer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -46,12 +52,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import theandroidguy.bart.keepreceipt.camera.CameraSource;
+import theandroidguy.bart.keepreceipt.camera.CameraSourcePreview;
+import theandroidguy.bart.keepreceipt.camera.GraphicOverlay;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 public class ScanReceipt extends AppCompatActivity{
 
     private Button btnCapture;
     private TextureView textureView;
 
     public static final int STORAGE_PERMISSION_REQUEST_CODE= 1;
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
 
     //Check state orientation of output image
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -67,12 +81,11 @@ public class ScanReceipt extends AppCompatActivity{
     private CameraCaptureSession cameraCaptureSessions;
     private CaptureRequest.Builder captureRequestBuilder;
     private Size imageDimension;
-    private ImageReader imageReader;
 
     //Save to FILE
     private File file;
-    private static final int REQUEST_CAMERA_PERMISSION = 200;
-    private boolean mFlashSupported;
+
+
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
@@ -94,14 +107,16 @@ public class ScanReceipt extends AppCompatActivity{
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_receipt);
         askPermissions();
 
-        textureView = findViewById(R.id.scannedReceiptImageView);
+        //delete existing picture if does exist for any reason
+        deleteReceipt();
+
+        textureView = findViewById(R.id.scannedReceiptTextureView);
         //From Java 1.4 , you can use keyword 'assert' to check expression true or false
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
@@ -109,6 +124,7 @@ public class ScanReceipt extends AppCompatActivity{
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnCapture.setEnabled(FALSE);
                 takePicture();
             }
         });
@@ -127,8 +143,8 @@ public class ScanReceipt extends AppCompatActivity{
             if (characteristics != null) {
                 jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
             }
-            int width = 1000;
-            int height = 1000;
+            int width = getWindowManager().getDefaultDisplay().getWidth();
+            int height = getWindowManager().getDefaultDisplay().getHeight();
             if (jpegSizes != null &&
                         0 < jpegSizes.length) {
                 width = jpegSizes[0].getWidth();
@@ -142,10 +158,12 @@ public class ScanReceipt extends AppCompatActivity{
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.indexOfValue(2));
-            final File file = new File(Environment.getExternalStorageDirectory()+"/picture.jpg");
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+            //Save file of snapped picture
+            file = new File(Environment.getExternalStorageDirectory()+"/krsnapped.jpg");
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -183,10 +201,24 @@ public class ScanReceipt extends AppCompatActivity{
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    //Toast.makeText(ScanReceipt.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
-                    Intent myint=new Intent(ScanReceipt.this, Insert_Receipt_Info_Activity.class);
-                    //myint.putExtra("act1","");
-                    startActivity(myint);
+                    final ProgressDialog progress = new ProgressDialog(ScanReceipt.this);
+                    progress.setTitle("Scanning...");
+                    progress.setMessage("Please wait while we analyze the receipt...");
+                    progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+                    progress.show();
+                    //open next activity
+                    Runnable r = new Runnable() {
+                        @Override
+                        public void run(){
+                            progress.dismiss();
+                            Intent myint=new Intent(ScanReceipt.this, Insert_Receipt_Info_Activity.class);
+                            //myint.putExtra("act1","");
+                            startActivity(myint);
+                        }
+                    };
+
+                    Handler h = new Handler();
+                    h.postDelayed(r, 2000);
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
@@ -197,6 +229,7 @@ public class ScanReceipt extends AppCompatActivity{
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }
+
                 }
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession session) {
@@ -272,6 +305,13 @@ public class ScanReceipt extends AppCompatActivity{
         }
     }
 
+    public void deleteReceipt(){
+        File file = new File(Environment.getExternalStorageDirectory()+"/picture.jpg");
+        if (file.exists() == true){
+            file.delete();
+        }
+    }
+
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
@@ -334,7 +374,6 @@ public class ScanReceipt extends AppCompatActivity{
 
         // we already asked for permisson & Permission granted, call camera intent
         if (permissionCheckStorage == PackageManager.PERMISSION_GRANTED) {
-
             //do what you want
 
         } else {
@@ -372,7 +411,6 @@ public class ScanReceipt extends AppCompatActivity{
                         STORAGE_PERMISSION_REQUEST_CODE);
 
             }
-
         }
     }
 }
