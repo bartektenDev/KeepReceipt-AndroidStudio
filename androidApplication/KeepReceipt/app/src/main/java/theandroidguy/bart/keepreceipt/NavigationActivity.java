@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
@@ -31,8 +33,7 @@ public class NavigationActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Refreshing receipts...", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Refreshing receipts...", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
                 Intent intent = new Intent(getApplicationContext(), ScanReceipt.class);
                 startActivity(intent);
@@ -86,11 +87,7 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            LinearLayout mainLayout = findViewById(R.id.dataLoadView);
-            LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.activity_main, null);
-            mainLayout.removeAllViews();
-            mainLayout.addView(layout);
+            selectDrawerItem(item);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -106,5 +103,41 @@ public class NavigationActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        // Create a new fragment and specify the fragment to show based on nav item clicked
+        Fragment fragment = null;
+        Class fragmentClass;
+        switch(menuItem.getItemId()) {
+            case R.id.nav_home:
+                fragmentClass = ListReceiptsActivity.class;
+                break;
+            case R.id.nav_gallery:
+                fragmentClass = ListReceiptsActivity.class;
+                break;
+            case R.id.nav_slideshow:
+                fragmentClass = ListReceiptsActivity.class;
+                break;
+            default:
+                fragmentClass = ListReceiptsActivity.class;
+        }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        // Highlight the selected item has been done by NavigationView
+        menuItem.setChecked(true);
+        // Set action bar title
+        setTitle(menuItem.getTitle());
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawers();
     }
 }

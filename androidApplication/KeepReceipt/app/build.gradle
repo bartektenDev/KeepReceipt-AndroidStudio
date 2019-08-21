@@ -49,4 +49,8 @@ dependencies {
 
     //google vision
     implementation 'com.google.cloud:google-cloud-vision:1.85.0'
+
+    //picasso json parsing
+    //implementation project(':picasso-2.5.2')
+    implementation 'com.android.volley:volley:1.1.1'
 }
