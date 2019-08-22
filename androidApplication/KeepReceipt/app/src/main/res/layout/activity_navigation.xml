@@ -8,14 +8,15 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        layout="@layout/app_bar_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <FrameLayout
         android:id="@+id/flContent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="48dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include
+        layout="@layout/app_bar_navigation"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

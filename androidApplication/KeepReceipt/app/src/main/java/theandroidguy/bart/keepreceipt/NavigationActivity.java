@@ -1,13 +1,13 @@
 package theandroidguy.bart.keepreceipt;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.LinearLayout;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -86,19 +85,7 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            selectDrawerItem(item);
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
+        selectDrawerItem(item);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -110,14 +97,17 @@ public class NavigationActivity extends AppCompatActivity
         Fragment fragment = null;
         Class fragmentClass;
         switch(menuItem.getItemId()) {
-            case R.id.nav_home:
+            case R.id.nav_dashboard:
                 fragmentClass = ListReceiptsActivity.class;
                 break;
-            case R.id.nav_gallery:
+            case R.id.nav_coupons:
                 fragmentClass = ListReceiptsActivity.class;
                 break;
-            case R.id.nav_slideshow:
+            case R.id.nav_statistical_data:
                 fragmentClass = ListReceiptsActivity.class;
+                break;
+            case R.id.nav_settings:
+                fragmentClass = SettingsActivity.class;
                 break;
             default:
                 fragmentClass = ListReceiptsActivity.class;
@@ -137,7 +127,7 @@ public class NavigationActivity extends AppCompatActivity
         menuItem.setChecked(true);
         // Set action bar title
         setTitle(menuItem.getTitle());
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawers();
+
     }
+
 }
